@@ -19,20 +19,23 @@ local settings = require("scripts.ErnSunderRandomizer.settings")
 local storage = require("openmw.storage")
 local clue = require("scripts.ErnSunderRandomizer.clue")
 local types = require("openmw.types")
+local common = require("scripts.ErnSunderRandomizer.common")
 
 if require("openmw.core").API_REVISION < 62 then
     error("OpenMW 0.49 or newer is required!")
 end
 
+common.initCommon()
+
 -- Init settings first to init storage which is used everywhere.
 settings.initSettings()
 
 local function saveState()
-    return stepTable:asTable()
+    return common.stepTable:asTable()
 end
 
 local function loadState(saved)
-    stepTable:reset(saved)
+    common.stepTable:reset(saved)
 end
 
 -- data.actor is the current posssessor
@@ -52,7 +55,7 @@ local function hideItem(data)
         return
     end
 
-    -- find sunder
+    -- find treasure
     dvInventory = types.Actor.inventory(actor)
     treasureInstance = dvInventory:find(itemRecordID)
     if treasureInstance == nil then
@@ -68,11 +71,14 @@ local function hideItem(data)
         return
     end
 
-    -- put dagothVemyn at start of chain.
+    -- put actor at start of chain.
     table.insert(chain, 1, {
         cell=nil,
         npc=actor,
     })
+
+    -- mark so we don't hide this again
+    common.markAsHidden(actor, itemRecordID)
 
     for i, step in ipairs(chain) do
         if i == totalSteps then

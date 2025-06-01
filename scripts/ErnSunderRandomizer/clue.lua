@@ -66,7 +66,7 @@ end
 local function getRandomNPCinCell(cell)
     size = 0
     asList = {}
-    for _, npc = ipairs(cell:getAll(types.NPC)) do
+    for _, npc in ipairs(cell:getAll(types.NPC)) do
         if filterNPC(npc) then
             size = size + 1
             table.insert(asList, cell)
@@ -132,13 +132,13 @@ local function createClueRecord(number, itemName, cell, npcInstance)
     record = {
         enchant = nil,
         enchantCapacity = 0,
-        icon = "m\\Tx_note_02.tga"
-        id = settings .. "_clue_" .. number,
+        icon = "m\\Tx_note_02.tga",
+        id = (settings .. "_clue_" .. number),
         isScroll = false,
         model = "m\\Text_Note_02.nif",
         name = localization("clue_name", {number=number}),
         skill = nil,
-        text = localization("clue_body", {itemName=localization(itemName),npc=localization(npcName), location=location}),
+        text = localization("clue_body", {itemName=localization(itemName), npc=localization(npcName), location=location}),
     }
 
     world.createRecord(record)

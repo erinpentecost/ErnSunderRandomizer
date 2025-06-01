@@ -18,8 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 local self = require("openmw.self")
 local types = require("openmw.types")
 local common = require("scripts.ErnSunderRandomizer.common")
-
-local stepTable = storage.globalSection(S.MOD_NAME .. "StepTable")
+local settings = require("scripts.ErnSunderRandomizer.settings")
 
 if require("openmw.core").API_REVISION < 62 then
     error("OpenMW 0.49 or newer is required!")
@@ -28,24 +27,24 @@ end
 local function onActive()
     id = self.id
     if id == false then
-        S.debugPrint("npc doesn't have an id???")
+        settings.debugPrint("npc doesn't have an id???")
         return
     end
 
     -- filters so things don't get out of hand
     if self.type ~= types.NPC then
-        S.debugPrint("npc script not applied on an NPC")
+        settings.debugPrint("npc script not applied on an NPC")
         return
     end
 
     if types.NPC.objectIsInstance(self) == false then
-        S.debugPrint("not an instance!")
+        settings.debugPrint("not an instance!")
         return
     end
 
     record = types.NPC.record(self)
     if record == nil then
-        S.debugPrint("npc " .. id .. " has no record?")
+        settings.debugPrint("npc " .. id .. " has no record?")
         return
     end
 

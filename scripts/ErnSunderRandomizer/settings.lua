@@ -34,6 +34,7 @@ local function debugPrint(str, ...)
 end
 
 local function initSettings()
+    print("init settings start")
     interfaces.Settings.registerGroup {
         key = "SettingsGlobal" .. MOD_NAME,
         l10n = MOD_NAME,
@@ -63,7 +64,7 @@ local function initSettings()
             }
         }
     }
-
+    print("init settings done")
     debugPrint("init settings done")
 end
 

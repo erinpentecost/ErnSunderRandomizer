@@ -19,11 +19,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 local core = require("openmw.core")
 local storage = require("openmw.storage")
 local types = require("openmw.types")
+local settings = require("scripts.ErnSunderRandomizer.settings")
+local stepTable = storage.globalSection(settings.MOD_NAME .. "StepTable")
 
 
-local stepTable = storage.globalSection(S.MOD_NAME .. "StepTable")
-stepTable:setLifeTime(storage.LIFE_TIME.Temporary)
-
+local function initCommon()
+    stepTable:setLifeTime(storage.LIFE_TIME.Temporary)
+end
 
 local function hideItemOnce(actor, itemRecordID)
     -- don't repeat work.
@@ -44,10 +46,16 @@ local function hideItemOnce(actor, itemRecordID)
         actor = actor,
         itemRecordID = itemRecordID,
     })
+end
+
+local function markAsHidden(actor, itemRecordID)
     -- mark as done
     stepTable:set("huntActive_" .. itemRecordID, true)
 end
 
 return {
+    initCommon = initCommon,
     hideItemOnce = hideItemOnce,
+    markAsHidden = markAsHidden,
+    stepTable = stepTable,
 }
