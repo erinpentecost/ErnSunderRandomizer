@@ -18,22 +18,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 local world = require("openmw.world")
 local types = require("openmw.types")
 local settings = require("scripts.ErnSunderRandomizer.settings")
-local cells = require("scripts.ErnSunderRandomizer.cells").cells
 local core = require("openmw.core")
 local localization = core.l10n(settings.MOD_NAME)
 
 -- getCellName returns the name of the cell or nil, if the name can't be determined.
 local function getCellName(cell)
     -- Don't know how to get localized cell names.
-    location = localization(cell.name)
-    if location == nil then
+    location = cell.name
+    if (location == nil or location == "") then
         if cell.gridX and cell.gridY then
             index = tostring(cell.gridX) .. ", " .. tostring(cell.gridY)
-            location = localization(cells[location])
+            location = localization(index)
+            if location == index then
+                -- failed to get a good name for the cell, so just drop it.
+                return nil
+            end
+            settings.debugPrint("cell rename " .. index .. " -> " .. location)
         end
-    end
-    if location == nil then
-        location = localization(cell.region)
     end
     return location
 end
@@ -113,23 +114,23 @@ local function getChain(steps)
 end
 
 
-local function createClueRecord(number, itemName, cell, npcInstance)
+local function createClueRecord(number, itemRecord, cell, npcInstance)
     cellName = getCellName(cell)
-    npcName = types.NPC.record(npc).name
-    record = {
+    npcName = types.NPC.record(npcInstance).name
+    recordFields = {
         enchant = nil,
         enchantCapacity = 0,
-        icon = "m\\Tx_note_02.tga",
-        id = (settings.MOD_NAME .. "_clue_" .. number),
+        icon = "meshes\\Tx_note_02.tga",
+        --id = (settings.MOD_NAME .. "_clue_" .. number),
         isScroll = false,
-        model = "m\\Text_Note_02.nif",
-        name = localization("clue_name", {number=number}),
+        model = "meshes\\Text_Note_02.nif",
+        name = localization("clue_name", {number=number, itemName=itemRecord.name}),
         skill = nil,
-        text = localization("clue_body", {itemName=localization(itemName), npc=localization(npcName), location=location}),
+        text = localization("clue_body", {itemName=itemRecord.name, npc=npcName, location=location}),
     }
-    settings.debugPrint(record.text)
-    world.createRecord(record)
-    return id
+    settings.debugPrint(recordFields.text)
+    draftRecord = types.Book.createRecordDraft(recordFields)
+    return world.createRecord(draftRecord)
 end
 
 return {

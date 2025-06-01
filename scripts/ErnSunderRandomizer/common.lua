@@ -37,10 +37,9 @@ local function hideItemOnce(actor, itemRecordID)
     end
 
     -- does actor even have the item?
-    item = types.Actor.inventory(actor):find(itemRecordID)
-    if item == nil then
-        recordName = types.NPC.record(self).id
-        error("actor " .. recordName .. " doesn't have " .. itemRecordID)
+    itemInstance = types.Actor.inventory(actor):find(itemRecordID)
+    if itemInstance == nil then
+        error("actor " .. types.NPC.record(self).id .. " doesn't have " .. itemRecordID)
         return
     end
 
@@ -49,13 +48,13 @@ local function hideItemOnce(actor, itemRecordID)
     -- send event
     core.sendGlobalEvent("LMhideItem", {
         actor = actor,
-        itemRecordID = itemRecordID,
+        itemInstance = itemInstance,
     })
 end
 
-local function markAsHidden(actor, itemRecordID)
+local function markAsHidden(actor, itemInstance)
     -- mark as done
-    stepTable:set("huntActive_" .. itemRecordID, true)
+    stepTable:set("huntActive_" .. itemInstance.type.record(itemInstance).id, true)
 end
 
 return {

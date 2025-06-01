@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 local settings = require("scripts.ErnSunderRandomizer.settings")
+local world = require("openmw.world")
 local storage = require("openmw.storage")
 local clue = require("scripts.ErnSunderRandomizer.clue")
 local types = require("openmw.types")
@@ -49,17 +50,18 @@ local function hideItem(data)
         error("hideItem handler passed in nil actor")
         return
     end
-    itemRecordID = data.itemRecordID
-    if itemRecordID == nil then
-        error("hideItem handler passed in nil itemRecordID")
+    itemInstance = data.itemInstance
+    itemRecord = itemInstance.type.record(itemInstance)
+    if itemRecord == nil then
+        error("hideItem handler passed in nil itemRecord")
         return
     end
 
     -- find treasure
     dvInventory = types.Actor.inventory(actor)
-    treasureInstance = dvInventory:find(itemRecordID)
+    treasureInstance = dvInventory:find(itemRecord.id)
     if treasureInstance == nil then
-        error("possesor doesn't have " .. itemRecordID)
+        error("possesor doesn't have " .. itemRecord.id)
         return
     end
 
@@ -78,18 +80,20 @@ local function hideItem(data)
     })
 
     -- mark so we don't hide this again
-    common.markAsHidden(actor, itemRecordID)
+    common.markAsHidden(actor, itemInstance)
 
     for i, step in ipairs(chain) do
         if i == totalSteps then
+            settings.debugPrint(i .. " moving " .. itemRecord.id .. " to " .. step.npc.id)
             -- last in the chain. move item here.
             inventory = types.Actor.inventory(step.npc)
             treasureInstance:moveInto(inventory)
         else
             -- each npc should have a clue pointing to the next.
-            nextStep = chain[i+1]
-            noteRecord = clue.createClueRecord(i, nextStep.cell, nextStep.npc)
-            noteInstance = world.createObject(noteRecord)
+            local nextStep = chain[i+1]
+            settings.debugPrint(i .. " placing clue for " .. nextStep.npc.recordId)
+            noteRecord = clue.createClueRecord(i, itemRecord, nextStep.cell, nextStep.npc)
+            noteInstance = world.createObject(noteRecord.id)
             noteInstance:moveInto(step.npc)
         end
     end
