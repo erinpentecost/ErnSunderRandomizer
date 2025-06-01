@@ -83,18 +83,21 @@ local function hideItem(data)
     common.markAsHidden(actor, itemInstance)
 
     for i, step in ipairs(chain) do
+        settings.debugPrint(i .. "/" .. totalSteps)
         if i == totalSteps then
             settings.debugPrint(i .. " moving " .. itemRecord.id .. " to " .. step.npc.id)
             -- last in the chain. move item here.
             inventory = types.Actor.inventory(step.npc)
             treasureInstance:moveInto(inventory)
-        else
+        elseif i < totalSteps then
             -- each npc should have a clue pointing to the next.
             local nextStep = chain[i+1]
             settings.debugPrint(i .. " placing clue for " .. nextStep.npc.recordId)
             noteRecord = clue.createClueRecord(i, itemRecord, nextStep.cell, nextStep.npc)
             noteInstance = world.createObject(noteRecord.id)
             noteInstance:moveInto(step.npc)
+        else
+            break
         end
     end
 end
