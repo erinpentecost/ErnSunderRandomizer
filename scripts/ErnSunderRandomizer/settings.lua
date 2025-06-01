@@ -80,5 +80,6 @@ return {
     initSettings = initSettings,
     settingsStore = settingsStore,
     MOD_NAME = MOD_NAME,
+    stepCount = stepCount,
     debugPrint = debugPrint,
 }

@@ -27,28 +27,33 @@ end
 local function onActive()
     id = self.id
     if id == false then
-        settings.debugPrint("npc doesn't have an id???")
+        error("no id")
         return
     end
 
-    -- filters so things don't get out of hand
-    if self.type ~= types.NPC then
-        settings.debugPrint("npc script not applied on an NPC")
-        return
+    recordID = ""
+
+    if self.type == types.NPC then
+        record = types.NPC.record(self)
+        if record == nil then
+            error("NPC " .. id .. " has no record?")
+            return
+        end
+        recordID = types.NPC.record(self).id
+    elseif self.type == types.Creature then
+        record = types.Creature.record(self)
+        if record == nil then
+            error("Creature " .. id .. " has no record?")
+            return
+        end
+        recordID = types.Creature.record(self).id
+    else
+        error("script applied to bad object")
     end
 
-    if types.NPC.objectIsInstance(self) == false then
-        settings.debugPrint("not an instance!")
-        return
-    end
+    settings.debugPrint(recordID .. " activated.")
 
-    record = types.NPC.record(self)
-    if record == nil then
-        settings.debugPrint("npc " .. id .. " has no record?")
-        return
-    end
-
-    if string.lower(record.id) == "dagoth vemyn" then
+    if string.lower(recordID) == "dagoth vemyn" then
         common.hideItemOnce(self, "sunder")
     end
 

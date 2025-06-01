@@ -133,14 +133,19 @@ local function createClueRecord(number, itemName, cell, npcInstance)
         enchant = nil,
         enchantCapacity = 0,
         icon = "m\\Tx_note_02.tga",
-        id = (settings .. "_clue_" .. number),
+        id = (settings.MOD_NAME .. "_clue_" .. number),
         isScroll = false,
         model = "m\\Text_Note_02.nif",
         name = localization("clue_name", {number=number}),
         skill = nil,
         text = localization("clue_body", {itemName=localization(itemName), npc=localization(npcName), location=location}),
     }
-
+    settings.debugPrint(record.text)
     world.createRecord(record)
     return id
 end
+
+return {
+    getChain = getChain,
+    createClueRecord = createClueRecord,
+}

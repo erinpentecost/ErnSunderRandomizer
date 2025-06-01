@@ -1,2 +1,3 @@
 GLOBAL:scripts/ErnSunderRandomizer/global.lua
-NPC:scripts/ErnSunderRandomizer/npc.lua
+NPC, CREATURE:scripts/ErnSunderRandomizer/npc.lua
+PLAYER:scripts/ErnSunderRandomizer/player.lua

@@ -28,8 +28,11 @@ local function initCommon()
 end
 
 local function hideItemOnce(actor, itemRecordID)
+    settings.debugPrint("hideItemOnce called for " .. actor.id .. " with item " .. itemRecordID)
+
     -- don't repeat work.
-    if stepTable:get("huntActive_" .. itemRecordID) ~= true then
+    if stepTable:get("huntActive_" .. itemRecordID) == true then
+        settings.debugPrint("Already hid " .. itemRecordID .. ", so skipping.")
         return
     end
 
@@ -40,6 +43,8 @@ local function hideItemOnce(actor, itemRecordID)
         error("actor " .. recordName .. " doesn't have " .. itemRecordID)
         return
     end
+
+    print("Hiding " .. itemRecordID)
 
     -- send event
     core.sendGlobalEvent("LMhideItem", {
