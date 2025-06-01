@@ -51,12 +51,12 @@ local function onActive()
         error("script applied to bad object")
     end
 
-    -- settings.debugPrint(recordID .. " activated.")
-
     if string.lower(recordID) == "dagoth vemyn" then
         common.hideItemOnce(self, "sunder")
     end
 
+    -- TODO: If the NPC has a clue item, randomly place it in a container
+    -- they own inside this cell (if any).
 end
 
 return {

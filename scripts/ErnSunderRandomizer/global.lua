@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 local settings = require("scripts.ErnSunderRandomizer.settings")
+local core = require("openmw.core")
 local world = require("openmw.world")
 local storage = require("openmw.storage")
 local clue = require("scripts.ErnSunderRandomizer.clue")
@@ -55,6 +56,16 @@ local function hideItem(data)
     if itemRecord == nil then
         error("hideItem handler passed in nil itemRecord")
         return
+    end
+
+    itemRecord = itemInstance.type.record(itemInstance)
+    -- apologize for the frame drops
+    -- this could be hidden with a coroutine that is resumed every frame,
+    -- but this just happens once per playthrough. don't bother.
+    for _, player in ipairs(world.players) do
+        player:sendEvent("LMshowHideMessage", {
+            itemName = itemRecord.name,
+        })
     end
 
     -- find treasure

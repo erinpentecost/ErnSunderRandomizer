@@ -4,6 +4,10 @@ This is a Morrowind [OpenMW](https://openmw.org/) mod that hides Sunder at the e
 
 This has *no dependencies* on any other mods and will *work with all content*, whether provided by a mod or with the base game.
 
+Dagoth Vemyn doesn't have Sunder anymore. Instead, he holds the first clue in a scavenger hunt all that can span all across Morrowind (and Tamriel and Anvil and Skyrim and whatever other mods you have installed). You can change the number of steps in the hunt in the mod settings; the default is 3. Take a randomized tour of all the content you installed every playthrough!
+
+![example](sunder_hunt.gif)
+
 
 ## Installing
 Extract [main](https://github.com/erinpentecost/ErnSunderRandomizer/archive/refs/heads/main.zip) to your `mods/` folder.
@@ -12,7 +16,7 @@ Extract [main](https://github.com/erinpentecost/ErnSunderRandomizer/archive/refs
 In your `openmw.cfg` file, and add these lines in the correct spots:
 
 ```yaml
-data="/wherevermymodsare/mods/ErnSundrRandomizer-main"
+data="/wherevermymodsare/mods/ErnSunderRandomizer-main"
 
 content=ErnSunderRandomizer.omwscripts
 ```

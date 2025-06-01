@@ -16,11 +16,26 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 local interfaces = require("openmw.interfaces")
+local ui = require('openmw.ui')
 local settings = require("scripts.ErnSunderRandomizer.settings")
+local localization = core.l10n(settings.MOD_NAME)
 
 interfaces.Settings.registerPage {
     key = settings.MOD_NAME,
     l10n = settings.MOD_NAME,
     name = "name",
     description = "description"
+}
+
+local function showHideMessage(data)
+    settings.debugPrint("showHideMessage")
+    msg = localization("hideMessage", {itemName=data.itemName})
+    print(msg)
+    ui.showMessage(msg)
+end
+
+return {
+    eventHandlers = {
+        LMshowHideMessage = showHideMessage
+    },
 }

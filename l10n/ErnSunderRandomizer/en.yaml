@@ -13,6 +13,7 @@ debugMode_description: "Print debug messages and disable persistency."
 clue_name: "{itemName} Clue #{number}"
 clue_body: "That n'wah continues their foolish hunt for {itemName}. They draw near; it isn't safe with you any longer. Deliver it to {npc} in {location} at once!<br>"
 
+hideMessage: "Hiding {itemName}. One moment please..."
 
 # Cell names
 "19, -4": "Holamayan, Azura's Coast Region"

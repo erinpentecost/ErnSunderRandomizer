@@ -43,8 +43,6 @@ local function hideItemOnce(actor, itemRecordID)
         return
     end
 
-    print("Hiding " .. itemRecordID)
-
     -- send event
     core.sendGlobalEvent("LMhideItem", {
         actor = actor,
