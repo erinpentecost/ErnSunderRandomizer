@@ -51,7 +51,7 @@ local function onActive()
         error("script applied to bad object")
     end
 
-    settings.debugPrint(recordID .. " activated.")
+    -- settings.debugPrint(recordID .. " activated.")
 
     if string.lower(recordID) == "dagoth vemyn" then
         common.hideItemOnce(self, "sunder")

@@ -39,45 +39,34 @@ local function getCellName(cell)
 end
 
 local function filterCell(cell)
-    return getCellName(cell) ~= nil
+    name = getCellName(cell)
+    return (name ~= nil) and (name ~= "")
 end
 
 local function filterNPC(npc)
-    -- Try to get named NPCs.
+    -- Try to get named NPCs that won't reset.
     rec = types.NPC.record(npc)
-    preliminary = (string.lower(rec.class) ~= "guard") and
+    return (string.lower(rec.class) ~= "guard") and
         (rec.isEssential ~= true) and
         (rec.isRespawning ~= true) and
         (types.Actor.isDead(npc) ~= true)
-    if preliminary ~= true then
-        return false
-    end
-
-    -- Filter Blades because we're trying to keep it lore friendly.
-    for _, factionId in pairs(types.NPC.getFactions(npc)) do
-        if (string.lower(factionId) == "blades") then
-            return false
-        end
-    end
-
-    return true
 end
 
 local function getRandomNPCinCell(cell)
-    size = 0
+    listSize = 0
     asList = {}
     for _, npc in ipairs(cell:getAll(types.NPC)) do
         if filterNPC(npc) then
-            size = size + 1
-            table.insert(asList, cell)
+            listSize = listSize + 1
+            table.insert(asList, npc)
         end
     end
 
-    if size == 0 then
+    if listSize == 0 then
         return nil
     end
 
-    randIndex = math.random(1, size)
+    randIndex = math.random(1, listSize)
     return asList[randIndex]
 end
 
@@ -85,27 +74,25 @@ end
 -- Each step will have a unique cell.
 local function getChain(steps)
     subset = {}
-    size = 0
+    subsetSize = 0
     for _, cell in ipairs(world.cells) do
         if filterCell(cell) then
-            location = getCellName(cell)
-            if location ~= nil then
-                holder = getRandomNPCinCell(cell)
-                if holder ~= nil then
-                    size = size + 1
-                    -- end of table is n+1, where n is length of table
-                    randIndex = math.random(1, size)
-                    table.insert(subset, randIndex, {cell=cell,npc=holder})
-                end
+            holder = getRandomNPCinCell(cell)
+            if holder ~= nil then
+                --settings.debugPrint(getCellName(cell) .. " -> " .. types.NPC.record(holder).id)
+                subsetSize = subsetSize + 1
+                -- end of table is n+1, where n is length of table
+                randIndex = math.random(1, subsetSize)
+                table.insert(subset, randIndex, {cell=cell,npc=holder})
             end
         end
     end
 
     -- subset is now a maximum-length, randomized chain
-    settings.debugPrint("Found " .. size .. " potential steps in the chain.")
+    settings.debugPrint("Found " .. subsetSize .. " potential steps in the chain.")
 
-    if size < steps then
-        error("want " .. steps .. " steps, but found only " .. size .. " valid steps.")
+    if subsetSize < steps then
+        error("want " .. steps .. " steps, but found only " .. subsetSize .. " valid steps.")
         return nil
     end
 
@@ -113,8 +100,8 @@ local function getChain(steps)
     output = {}
     count = 0
     for i, step in ipairs(subset) do
-        recId = types.NPC.record(subset.npc).id
-        settings.debugPrint(tostring(i) .. ": " .. recId .. " in " .. getCellName(subset.cell))
+        recId = types.NPC.record(step.npc).id
+        settings.debugPrint(tostring(i) .. ": " .. recId .. " in " .. getCellName(step.cell))
         table.insert(output, step)
         count = count + 1
         if count == steps then
