@@ -120,10 +120,9 @@ local function createClueRecord(number, itemRecord, cell, npcInstance)
     recordFields = {
         enchant = nil,
         enchantCapacity = 0,
-        icon = "meshes\\Tx_note_02.tga",
-        --id = (settings.MOD_NAME .. "_clue_" .. number),
+        icon = "icons\\Tx_parchment_02.tga",
         isScroll = false,
-        model = "meshes\\Text_Note_02.nif",
+        model = "meshes\\Text_Parchment_02.nif",
         name = localization("clue_name", {number=number, itemName=itemRecord.name}),
         skill = nil,
         text = localization("clue_body", {itemName=itemRecord.name, npc=npcName, location=location}),
