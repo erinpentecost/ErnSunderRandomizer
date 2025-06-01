@@ -47,7 +47,7 @@ local function initSettings()
                 key = "stepCount",
                 name = "stepCount_name",
                 description = "stepCount_description",
-                default = 5,
+                default = 3,
                 renderer = "number",
                 argument = {
                     integer = true,
