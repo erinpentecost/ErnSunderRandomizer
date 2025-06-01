@@ -17,7 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 local settings = require("scripts.ErnSunderRandomizer.settings")
 local storage = require("openmw.storage")
-local swapTable = require("scripts.ErnSunderRandomizer.swaptable")
+local clue = require("scripts.ErnSunderRandomizer.clue")
+local types = require("openmw.types")
 
 if require("openmw.core").API_REVISION < 62 then
     error("OpenMW 0.49 or newer is required!")
@@ -25,10 +26,6 @@ end
 
 -- Init settings first to init storage which is used everywhere.
 settings.initSettings()
-
--- stepTable holds step info. This is filled once Dagoth Vemyn is activated.
-local stepTable = storage.globalSection(S.MOD_NAME .. "StepTable")
-stepTable:setLifeTime(storage.LIFE_TIME.Temporary)
 
 local function saveState()
     return stepTable:asTable()
@@ -38,7 +35,64 @@ local function loadState(saved)
     stepTable:reset(saved)
 end
 
+-- data.actor is the current posssessor
+-- data.itemRecordID is the item to hide.
+local function hideItem(data)
+    settings.debugPrint("hideItem started")
+
+    -- input validation
+    actor = data.actor
+    if actor == nil then
+        error("hideItem handler passed in nil actor")
+        return
+    end
+    itemRecordID = data.itemRecordID
+    if itemRecordID == nil then
+        error("hideItem handler passed in nil itemRecordID")
+        return
+    end
+
+    -- find sunder
+    dvInventory = types.Actor.inventory(actor)
+    treasureInstance = dvInventory:find(itemRecordID)
+    if treasureInstance == nil then
+        error("possesor doesn't have " .. itemRecordID)
+        return
+    end
+
+    -- build clue chain
+    totalSteps = settings.stepCount()
+    chain = clue.getChain(totalSteps)
+    if chain == nil then
+        error("failed to create chain")
+        return
+    end
+
+    -- put dagothVemyn at start of chain.
+    table.insert(chain, 1, {
+        cell=nil,
+        npc=actor,
+    })
+
+    for i, step in ipairs(chain) do
+        if i == totalSteps then
+            -- last in the chain. move item here.
+            inventory = types.Actor.inventory(step.npc)
+            treasureInstance:moveInto(inventory)
+        else
+            -- each npc should have a clue pointing to the next.
+            nextStep = chain[i+1]
+            noteRecord = clue.createClueRecord(i, nextStep.cell, nextStep.npc)
+            noteInstance = world.createObject(noteRecord)
+            noteInstance:moveInto(step.npc)
+        end
+    end
+end
+
 return {
+    eventHandlers = {
+        LMhideItem = hideItem
+    },
     engineHandlers = {
         onSave = saveState,
         onLoad = loadState

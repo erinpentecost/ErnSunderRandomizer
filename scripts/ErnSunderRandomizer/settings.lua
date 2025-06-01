@@ -51,7 +51,7 @@ local function initSettings()
                 argument = {
                     integer = true,
                     min = 1,
-                    max = 30
+                    max = 50
                 }
             },
             {
@@ -65,6 +65,10 @@ local function initSettings()
     }
 
     debugPrint("init settings done")
+end
+
+local function stepCount()
+    return settingsStore:get("stepCount")
 end
 
 local function debugMode()

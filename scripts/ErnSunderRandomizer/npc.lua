@@ -15,18 +15,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
-local core = require("openmw.core")
 local self = require("openmw.self")
-local storage = require("openmw.storage")
 local types = require("openmw.types")
-local swapTable = require("scripts.ErnSunderRandomizer.swaptable")
+local common = require("scripts.ErnSunderRandomizer.common")
 
 local stepTable = storage.globalSection(S.MOD_NAME .. "StepTable")
 
 if require("openmw.core").API_REVISION < 62 then
     error("OpenMW 0.49 or newer is required!")
 end
-
 
 local function onActive()
     id = self.id
@@ -52,18 +49,10 @@ local function onActive()
         return
     end
 
-
-    -- todo:
-    -- if npc is in the chain (not termination though):
-    -- * add note
-    -- * mark as done, so we don't re-add note
-    -- if npc is end of chain:
-    -- * add sunder if they don't have one
-    -- * mark as done, so we don't re-add sunder
-    if swapMarker:get(id, true) then
-        S.debugPrint("npc " .. id .. " already handled")
-        return
+    if string.lower(record.id) == "dagoth vemyn" then
+        common.hideItemOnce(self, "sunder")
     end
+
 end
 
 return {

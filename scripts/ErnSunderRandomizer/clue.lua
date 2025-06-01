@@ -112,17 +112,21 @@ local function getChain(steps)
     -- return first "steps" elements in subset.
     output = {}
     count = 0
-    for _, step in ipairs(subset) do
+    for i, step in ipairs(subset) do
+        recId = types.NPC.record(subset.npc).id
+        settings.debugPrint(tostring(i) .. ": " .. recId .. " in " .. getCellName(subset.cell))
         table.insert(output, step)
         count = count + 1
         if count == steps then
             return output
         end
     end
+    error("failed to get correct number of steps")
+    return nil
 end
 
 
-local function createClueRecord(number, cell, npcInstance)
+local function createClueRecord(number, itemName, cell, npcInstance)
     cellName = getCellName(cell)
     npcName = types.NPC.record(npc).name
     record = {
@@ -134,7 +138,7 @@ local function createClueRecord(number, cell, npcInstance)
         model = "m\\Text_Note_02.nif",
         name = localization("clue_name", {number=number}),
         skill = nil,
-        text = localization("clue_body", {npc=localization(npcName), location=location}),
+        text = localization("clue_body", {itemName=localization(itemName),npc=localization(npcName), location=location}),
     }
 
     world.createRecord(record)

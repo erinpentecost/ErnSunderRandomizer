@@ -10,5 +10,5 @@ stepCount_description: "Number of steps in the scavenger hunt."
 debugMode_name: "Debug Mode"
 debugMode_description: "Print debug messages and disable persistency."
 
-clue_name: "Sunder Clue #{number}"
-clue_body: "The Nerevarine continues their foolish hunt for Sunder. The artifact isn't safe with you.<br>Deliver it to <b>{npc}</b> in <b>{location}</b> at once!"
+clue_name: "Clue #{number}"
+clue_body: "That n'wah continues their foolish hunt for {itemName}. They draw near; it isn't safe with you any longer.<br>Deliver it to <b>{npc}</b> in <b>{location}</b> at once!"
