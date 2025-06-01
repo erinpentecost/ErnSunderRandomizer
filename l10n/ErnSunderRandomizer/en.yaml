@@ -1,0 +1,14 @@
+name: "ErnSunderRandomizer"
+description: "Sunder is hidden at the end of a scavenger hunt (aka clue hunt). Follow the clues to track it down."
+
+modSettingsTitle: "Mod Options"
+modSettingsDesc: "Change how the mod works."
+
+stepCount_name: "Clue Count"
+stepCount_description: "Number of steps in the scavenger hunt."
+
+debugMode_name: "Debug Mode"
+debugMode_description: "Print debug messages and disable persistency."
+
+clue_name: "Sunder Clue #{number}"
+clue_body: "The Nerevarine continues their foolish hunt for Sunder. The artifact isn't safe with you.<br>Deliver it to <b>{npc}</b> in <b>{location}</b> at once!"
