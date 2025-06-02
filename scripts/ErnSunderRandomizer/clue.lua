@@ -124,9 +124,6 @@ end
 
 
 local function createClueRecord(number, itemRecord, cell, npcInstance)
-    -- icons\m\tx_parchment_02.dds
-    -- meshes/m/text_parchment_02.nif
-
     cellName = getCellName(cell)
     npcName = types.NPC.record(npcInstance).name
     recordFields = {
