@@ -41,7 +41,16 @@ end
 
 local function filterCell(cell)
     name = getCellName(cell)
-    return (name ~= nil) and (name ~= "")
+    if (name == nil) or (name == "") then
+        return false
+    end
+    if string.find(string.lower(name), ".*test.*") ~= nil then
+        return false
+    end
+    if string.find(string.lower(name), ".*_.*") ~= nil then
+        return false
+    end
+    return true
 end
 
 local function filterNPC(npc)
@@ -115,16 +124,13 @@ end
 
 
 local function createClueRecord(number, itemRecord, cell, npcInstance)
-    -- icons\m\tx_parchment_02.dds
-    -- meshes/m/text_parchment_02.nif
-
     cellName = getCellName(cell)
     npcName = types.NPC.record(npcInstance).name
     recordFields = {
         enchant = nil,
         enchantCapacity = 0,
         icon = "icons\\m\\tx_parchment_02.dds",
-        isScroll = false,
+        isScroll = true,
         model = "meshes\\m\\text_parchment_02.nif",
         name = localization("clue_name", {number=number, itemName=itemRecord.name}),
         skill = nil,

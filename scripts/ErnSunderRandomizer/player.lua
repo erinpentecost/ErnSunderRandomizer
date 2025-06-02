@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 local interfaces = require("openmw.interfaces")
 local ui = require('openmw.ui')
 local settings = require("scripts.ErnSunderRandomizer.settings")
+local core = require("openmw.core")
 local localization = core.l10n(settings.MOD_NAME)
 
 interfaces.Settings.registerPage {
